@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="container">
-      <div class="row my-2">
+      <div class="row my-2" v-if="status">
         <div class="col-12">
           <div class="w-100 d-flex justify-content-center">
             <div class="alert alert-success" role="alert">
@@ -62,8 +62,9 @@ export default {
       buttons: 9,
       active: true,
       player: 'X',
+      status: false,
       gameState: ["", "", "", "", "", "", "", "", ""],
-      winningConditions : [
+      winningCombinations : [
           [0, 1, 2],
           [3, 4, 5],
           [6, 7, 8],
@@ -93,7 +94,7 @@ export default {
         return
       }else{
         this.handleCellPlayed(value,clickedCell);
-        // this.handleResultValidation();
+        this.handleResultValidation();
       }
     },
     handleCellPlayed(currentcell,cell) {
@@ -105,7 +106,40 @@ export default {
 
     },
     handleResultValidation() {
+      // first, set a variable as false,and if the checking has detected that there is same combinations of winning state,then the variable will be set as true
+      // second, do the checking of the winning combination
+      // third, check if the game is draw
+      let roundWon = false;
+      for (let i = 0; i <= 7; i++) {
+        const winCondition = this.winningCombinations[i];
+        let a = this.gameState[winCondition[0]];
+        let b = this.gameState[winCondition[1]];
+        let c = this.gameState[winCondition[2]];
+        if (a === '' || b === '' || c === '') {
+            continue;
+        }
+        if (a === b && b === c) {
+            roundWon = true;
+            break
+        }
+      }
 
+      if (roundWon) {
+        this.status = true;
+        this.active = false;
+        return;
+      }
+
+      // check if game state is not filled with any numbers, if no empty slot in game state array,meaning that the game is draw
+      // set a variable starting with false
+      // if the variable true,then set the active variable as false
+      let roundDraw = !this.gameState.includes("");
+      if (roundDraw) {
+          this.active = false;
+          return;
+      }
+     
+      this.handlePlayerChange();
     },
     handleRestartGame() {
 
