@@ -4,8 +4,9 @@
       <div class="row my-2" v-if="status">
         <div class="col-12">
           <div class="w-100 d-flex justify-content-center">
-            <div class="alert alert-success" role="alert">
-              Player {{ player }} wins! Click 'Reset' button to restart
+            <div class="alert alert-success col-8" role="alert">
+              <h2>Player {{ player }} wins! </h2>
+              <p class="mb-0"> Click 'Reset' button to restart </p>
             </div>
           </div>
         </div>
@@ -14,7 +15,7 @@
         <div class="col-12">
           <h2>TIC TAC TOE - FROM NJ</h2>
         </div>
-        <div class="col-12 my-3">
+        <div class="col-12 my-3" v-if="playersTurnDiv">
           <div class="w-100 d-flex justify-content-center">
             <div class="alert alert-secondary" role="alert">
               Next player: {{ player }}
@@ -26,7 +27,7 @@
             <div class="board_container" id="board">
               <div class="row">
                 <div v-for="(button,index) in buttons" :key="'btn'+index" :id="'cell'+index" class="col-4 border m-0 p-0 cell" :data-cell="index" @click="handleCellClick(index,$event)">
-                  <div class="w-100 h-100 d-flex align-items-center justify-content-center">
+                  <div class="w-100 h-100 d-flex align-items-center justify-content-center cell_in">
                   </div>
                 </div>
               </div>
@@ -62,6 +63,7 @@ export default {
       buttons: 9,
       active: true,
       player: 'X',
+      playersTurnDiv: true,
       status: false,
       gameState: ["", "", "", "", "", "", "", "", ""],
       winningCombinations : [
@@ -77,34 +79,31 @@ export default {
     }
   },
   methods:{
-    reset(){
-      console.log('testing');
-    },
     handleCellClick(value,e) {
 
       // console.log(value);
       
-      // check if the cell is already clicked and game is ongoing,
+      // check if the specific cell is already clicked and game is ongoing,
       // if yes,ignore
       // else, store the cell into gameState,and display the current's players in the selected cell
 
       const clickedCell = e.target;
 
-      if(this.gameState[value] != "" && !this.active){
+      if(this.gameState[value] != "" || !this.active){
         return
-      }else{
-        this.handleCellPlayed(value,clickedCell);
-        this.handleResultValidation();
       }
+
+        
+      this.handleCellPlayed(value,clickedCell);
+      this.handleResultValidation();
+      
     },
     handleCellPlayed(currentcell,cell) {
       //insert into gamestate arr
       this.gameState[currentcell] = this.player;
       cell.innerHTML = this.player;
     },
-    handlePlayerChange() {
 
-    },
     handleResultValidation() {
       // first, set a variable as false,and if the checking has detected that there is same combinations of winning state,then the variable will be set as true
       // second, do the checking of the winning combination
@@ -127,6 +126,7 @@ export default {
       if (roundWon) {
         this.status = true;
         this.active = false;
+        this.playersTurnDiv = false;
         return;
       }
 
@@ -136,13 +136,24 @@ export default {
       let roundDraw = !this.gameState.includes("");
       if (roundDraw) {
           this.active = false;
+          this.playersTurnDiv = false;
           return;
       }
      
       this.handlePlayerChange();
     },
-    handleRestartGame() {
 
+    handlePlayerChange() {
+      this.player = this.player === "X" ? "O" : "X";
+    },
+
+    reset(){
+      this.active = true;
+      this.player = 'X';
+      this.playersTurnDiv = true;
+      this.status = false;
+      this.gameState = ["", "", "", "", "", "", "", "", ""];
+      document.querySelectorAll('.cell_in').forEach(cell => cell.innerHTML = "");
     }
   }
 }
@@ -150,9 +161,7 @@ export default {
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: 'Lato', sans-serif;
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
