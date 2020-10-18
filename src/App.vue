@@ -5,7 +5,7 @@
         <div class="col-12">
           <div class="w-100 d-flex justify-content-center">
             <div class="alert alert-success" role="alert">
-              Player {{ Player }} wins! Click 'Reset' button to restart
+              Player {{ player }} wins! Click 'Reset' button to restart
             </div>
           </div>
         </div>
@@ -14,11 +14,18 @@
         <div class="col-12">
           <h2>TIC TAC TOE - FROM NJ</h2>
         </div>
+        <div class="col-12 my-3">
+          <div class="w-100 d-flex justify-content-center">
+            <div class="alert alert-secondary" role="alert">
+              Next player: {{ player }}
+            </div>
+          </div>
+        </div>
         <div class="col-12 mt-3">
           <div class="w-100 d-flex justify-content-center">
-            <div class="board_container">
+            <div class="board_container" id="board">
               <div class="row">
-                <div v-for="(button,indexs) in buttons" :key="'btn'+indexs" class="col-4 border m-0 p-0">
+                <div v-for="(button,index) in buttons" :key="'btn'+index" :id="'cell'+index" class="col-4 border m-0 p-0">
                   <div class="w-100 h-100 d-flex align-items-center justify-content-center cell">
                       {{ button }}
                   </div>
@@ -30,7 +37,7 @@
       </div>
       <div class="row my-3">
         <div class="col-12">
-          <div class="btn btn-primary">
+          <div class="btn btn-primary" @click="reset()">
             Reset
           </div>
         </div>
@@ -40,15 +47,54 @@
 </template>
 
 <script>
+// 1) set data variables
+// player -> set player to determine the current player
+// active -> check if game is finished
+// gamestate -> t0 check current turn
+// winningconditions -> cell combinations of winning state
 
+
+// guidelines from :
+// https://medium.com/javascript-in-plain-english/build-tic-tac-toe-game-using-javascript-3afba3c8fdcc
 export default {
   name: 'App',
   data() {
     return {
-      row: 3,
       buttons: 9,
-      status: 'Next player: X'
-    };
+      active: true,
+      player: 'X',
+      gameState: ["", "", "", "", "", "", "", "", ""],
+      winningConditions : [
+          [0, 1, 2],
+          [3, 4, 5],
+          [6, 7, 8],
+          [0, 3, 6],
+          [1, 4, 7],
+          [2, 5, 8],
+          [0, 4, 8],
+          [2, 4, 6]
+      ]
+    }
+  },
+  methods:{
+    reset(){
+      console.log('testing');
+    },
+    handleCellPlayed() {
+
+    },
+    handlePlayerChange() {
+
+    },
+    handleResultValidation() {
+
+    },
+    handleCellClick() {
+
+    },
+    handleRestartGame() {
+
+    }
   }
 }
 </script>
