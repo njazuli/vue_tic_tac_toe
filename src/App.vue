@@ -25,9 +25,8 @@
           <div class="w-100 d-flex justify-content-center">
             <div class="board_container" id="board">
               <div class="row">
-                <div v-for="(button,index) in buttons" :key="'btn'+index" :id="'cell'+index" class="col-4 border m-0 p-0">
-                  <div class="w-100 h-100 d-flex align-items-center justify-content-center cell">
-                      {{ button }}
+                <div v-for="(button,index) in buttons" :key="'btn'+index" :id="'cell'+index" class="col-4 border m-0 p-0 cell" :data-cell="index" @click="handleCellClick(index,$event)">
+                  <div class="w-100 h-100 d-flex align-items-center justify-content-center">
                   </div>
                 </div>
               </div>
@@ -80,16 +79,32 @@ export default {
     reset(){
       console.log('testing');
     },
-    handleCellPlayed() {
+    handleCellClick(value,e) {
 
+      // console.log(value);
+      
+      // check if the cell is already clicked and game is ongoing,
+      // if yes,ignore
+      // else, store the cell into gameState,and display the current's players in the selected cell
+
+      const clickedCell = e.target;
+
+      if(this.gameState[value] != "" && !this.active){
+        return
+      }else{
+        this.handleCellPlayed(value,clickedCell);
+        // this.handleResultValidation();
+      }
+    },
+    handleCellPlayed(currentcell,cell) {
+      //insert into gamestate arr
+      this.gameState[currentcell] = this.player;
+      cell.innerHTML = this.player;
     },
     handlePlayerChange() {
 
     },
     handleResultValidation() {
-
-    },
-    handleCellClick() {
 
     },
     handleRestartGame() {
